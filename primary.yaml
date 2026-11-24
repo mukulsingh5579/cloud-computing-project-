@@ -1,0 +1,29 @@
+# Apply to the primary Kubernetes cluster.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: visitor-primary
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: visitor-app
+  namespace: visitor-primary
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: visitor-primary
+  template:
+    metadata:
+      labels:
+        app: visitor-primary
+    spec:
+      containers:
+      - name: web
+        image: visitor-counter:1.0
+        ports:
+        - containerPort: 5000
+        env:
+        - name: REDIS_HOST
+          value: redis-primary
